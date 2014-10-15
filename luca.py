@@ -11,7 +11,8 @@ if __name__ == "__main__":
     Main.init(resizable=True)
 
     # Run a scene with our event displayers:
-    Main.run( cocos.scene.Scene( spritelayer.SpriteLayer() ) )
+    spritelayer = spritelayer.SpriteLayer(253, 246, 227, 255)
+    Main.run( cocos.scene.Scene(spritelayer) )
 
     # Sample of running multiple scenes at once:
     #cocos.director.director.run( cocos.scene.Scene( keydisplay.KeyDisplay(), mousedisplay.MouseDisplay(), MainLayer() ) )

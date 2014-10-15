@@ -1,2 +1,3 @@
 import spritelayer
-import resources
+import resources, colors
+import movement
