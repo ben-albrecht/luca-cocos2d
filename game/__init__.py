@@ -1,2 +1,2 @@
-import keydisplay, mousedisplay, spritelayer
+import spritelayer
 import resources

@@ -1,5 +1,6 @@
 import cocos
-from game import keydisplay, mousedisplay, resources, spritelayer
+from game import  resources, spritelayer
+from game.inputs import keydisplay, mousedisplay
 
 
 if __name__ == "__main__":
