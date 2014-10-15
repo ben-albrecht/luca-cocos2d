@@ -5,7 +5,7 @@ A Microbial Life Simulation With Cocos2d
 
 Where we are:
 
-![Microbial Life - The Inspriration](https://raw.githubusercontent.com/exit-1/luca-cocos2d/master/screenshots/10.15.14.png)
+![Microbial Life - The Inspriration](https://raw.githubusercontent.com/exit-1/luca-cocos2d/master/screenshots/latest.png)
 
 Where we want to be:
 
