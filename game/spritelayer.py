@@ -5,7 +5,7 @@ from cocos.director import director
 from cocos.actions import *
 
 
-class SpriteLayer( cocos.layer.ColorLayer ):
+class SpriteLayer( cocos.layer.Layer ):
     """"
     Layer to hold all and manage
     sprites in game window

@@ -87,8 +87,6 @@ class Cell(physicalobject.PhysicalObject):
                             self.inview.append(obj)
                             if obj.Type == 'food':
                                 self.target = obj
-                                print "target found:"
-                                print obj.Type, obj.position
 
 
     def eat(self):
