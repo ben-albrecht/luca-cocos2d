@@ -1,74 +1,98 @@
 import cocos
 import random
 
-class MoveCell(cocos.actions.Move):
-    def step(self, dt):
-        super(MoveCell, self).step(dt)
-        self.random()
+"""
+Rewriting my own movement classes because I don't like the Cocos Defaults
+"""
+
+class MoveTo(cocos.actions.base_actions.Action):
+    def init(self, coords, *args, **kwargs):
+        super(MoveTo, self).init(*args, **kwargs)
+        self.coords = coords
+        self.x_max, self.y_max = cocos.director.director.get_window_size()
+        self.x_min, self.y_min = 0, 0
 
 
-    def random(self):
-        """ random walk code"""
-        if bool(random.getrandbits(1)):
-            if bool(random.getrandbits(1)):
-                self.target.set_position(self.target.position[0]+1, self.target.position[1])
-            else:
-                self.target.set_position(self.target.position[0]-1, self.target.position[1])
-        else:
-            if bool(random.getrandbits(1)):
-                self.target.set_position(self.target.position[0], self.target.position[1]+1)
-            else:
-                self.target.set_position(self.target.position[0], self.target.position[1]-1)
-
-
-class MoveToCell(cocos.actions.Action):
-    """
-    Modified movement to target
-    Done moving when past target
-    """
-    def init(self, dst_coords, *args, **kwargs):
-        """Init method.
-
-        :Parameters:
-            `dst_coords` : (x,y)
-                Coordinates where the sprite will be placed at the end of the action
+    def start(self):
         """
-        self.end_position = dst_coords
-
-    def start( self ):
-        self.start_position = self.target.position
-        self.delta = self.target.velocity
-        self.end_X = self.X_diff()
-        self.end_Y = self.Y_diff()
+        Never inherit start
+        """
+        self.end_position = self.coords
 
 
-    def step(self,dt):
-        self.target.set_position(self.target.position[0] + dt*self.delta[0], self.target.position[1] + dt*self.delta[1])
-        self.random()
+    def step(self, dt):
+        x = self.target.position[0]
+        y = self.target.position[1]
+        if self.end_position[0] > x:
+            dx = 1
+        elif self.end_position[0] < x:
+            dx = -1
+        else:
+            dx = 0
+
+        if self.end_position[1] > y:
+            dy = 1
+        elif self.end_position[1] < y:
+            dy = -1
+        else:
+            dy = 0
+
+        self.target.set_position(x + dx, y + dy)
+        self.check_bounds()
+
 
     def done(self):
-        if ((not self.end_X == self.X_diff() ) and ( not self.end_Y == self.Y_diff() )):
-            print "Destination Passed"
+        if self.target == None:
+            return True
+        else:
+            return self.target.position == self.end_position
 
-        return ((not self.end_X == self.X_diff() ) and ( not self.end_Y == self.Y_diff() ))
 
-    def X_diff(self):
-        return (self.target.position[0] -  self.end_position[0] <= 0)
+    def check_bounds(self):
+        """
+        Check boundaries of window
+        """
+        if self.target.x < self.x_min:
+            self.target.x = self.x_min
+            self.target.direction = 0
+        elif self.target.x > self.x_max:
+            self.target.x = self.x_max
+            self.target.direction = 1
+        if self.target.y < self.y_min:
+            self.target.y = self.y_min
+            self.target.direction = 2
+        elif self.target.y > self.y_max:
+            self.target.y = self.y_max
+            self.target.direction = 3
 
-    def Y_diff(self):
-        return (self.target.position[1] - self.end_position[1] <= 0)
+
+class MoveBy(MoveTo):
+    def init(self, coords):
+        super(MoveBy, self).init(coords)
+
+    def start(self):
+        x = self.target.position[0] + self.coords[0]
+        y = self.target.position[1] + self.coords[1]
+        self.end_position = x, y
+
+
+
+class RandomWalk(cocos.actions.Move):
+    def step(self, dt):
+        super(Move, self).step(dt)
+        self.random()
 
 
     def random(self):
         """ random walk code"""
         if bool(random.getrandbits(1)):
             if bool(random.getrandbits(1)):
-                self.target.set_position(self.target.position[0]+1, self.target.position[1])
+                self.target.set_position(self.target.position[0]+.05, self.target.position[1])
             else:
-                self.target.set_position(self.target.position[0]-1, self.target.position[1])
+                self.target.set_position(self.target.position[0]-.05, self.target.position[1])
         else:
             if bool(random.getrandbits(1)):
-                self.target.set_position(self.target.position[0], self.target.position[1]+1)
+                self.target.set_position(self.target.position[0], self.target.position[1]+.05)
             else:
-                self.target.set_position(self.target.position[0], self.target.position[1]-1)
+                self.target.set_position(self.target.position[0], self.target.position[1]-.05)
 

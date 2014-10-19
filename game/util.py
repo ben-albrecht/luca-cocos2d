@@ -25,6 +25,7 @@ def center_image(image):
 
 def get_dimensions():
     # TODO: test on Mac & Windows
+    # Unnecessary?
     if sys.platform == 'darwin':
         # Mac
         #print NSScreen.mainScreen().frame()
@@ -51,4 +52,11 @@ def module_exists(module_name):
         return False
     else:
         return True
+
+
+def record():
+    pass
+    # One Screen Shot: on key press - start, stop
+    #import time                                                                                                                 
+    #pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot-%d.png' % (int( time.time() ) ) )
 
