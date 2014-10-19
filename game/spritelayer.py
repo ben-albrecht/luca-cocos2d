@@ -19,13 +19,25 @@ class SpriteLayer( cocos.layer.ColorLayer ):
         Initialize some sprites on the screen and call the
         schedule function
         """
+        self.time = 0
 
         # Superclass constructor
         super(SpriteLayer, self ).__init__(*args, **kwargs)
 
-        x,y = director.get_window_size()
-        print "Game Dimensions: ", x,"x", y
+        x, y = director.get_window_size()
+        self.x_max = x
+        self.y_max = y
+        print "Game Dimensions: ", self.x_max,"x", self.y_max
 
+        self.load()
+
+        # Call update function every frame
+        self.schedule(self.update)
+
+
+    def load(self):
+        self.add(cell.Cell(position=(300,300), color=colors.blue))
+        self.add(cell.Cell(position=(300,300), color=colors.blue))
         self.add(cell.Cell(position=(300,300), color=colors.blue))
         #self.children[0][1].get_objlist(self.children)
 
@@ -33,12 +45,7 @@ class SpriteLayer( cocos.layer.ColorLayer ):
         self.add(food.Food(position=(random.randint(250,350), random.randint(250,350))))
         self.add(food.Food(position=(random.randint(250,350), random.randint(250,350))))
         #self.add(food.Food(position=(random.randint(0, x), random.randint(0,y))))
-
-        # Call update function every frame
-        self.schedule(self.update)
-
-
-    def load(self):
+        """
         while self.counter[self.indices[Type]] < Num:
             new_obj = self.types[Type](box=self.box,
                                 name=Type+str(self.counter[self.indices[Type]]),
@@ -55,6 +62,7 @@ class SpriteLayer( cocos.layer.ColorLayer ):
             if not collides:
                 self.objects.append(new_obj)
                 self.counter[self.indices[Type]] += 1
+        """
 
 
     def update(self, dt):
@@ -65,6 +73,10 @@ class SpriteLayer( cocos.layer.ColorLayer ):
         So to call first object's update member function we call
             self.children[0][1].update(dt)
         """
+        self.time += 1
+        # Spawn food every 120 frames for now
+        if self.time % 120 == 0:
+            self.add(food.Food(position=(random.randint(0,self.x_max), random.randint(0,self.y_max))))
 
         # Check collisions from last dt
         self.check_collisions()

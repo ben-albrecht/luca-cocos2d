@@ -29,7 +29,7 @@ def get_dimensions():
     if sys.platform == 'darwin':
         # Mac
         #print NSScreen.mainScreen().frame()
-        #dim  
+        #dim
         #NSScreen.mainScreen().frame().width
         #NSScreen.mainScreen().frame().height
         # macbookpro 13'' =1280x800 (640, 400)
@@ -57,6 +57,6 @@ def module_exists(module_name):
 def record():
     pass
     # One Screen Shot: on key press - start, stop
-    #import time                                                                                                                 
+    #import time
     #pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot-%d.png' % (int( time.time() ) ) )
 

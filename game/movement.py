@@ -42,28 +42,63 @@ class MoveTo(cocos.actions.base_actions.Action):
 
 
     def done(self):
+        """
+        MoveTo is done if our target ceases to exist,
+            if we go out of bounds, or if we reach our target
+        """
         if self.target == None:
+            return True
+        elif self.check_bounds(self.end_position[0], self.end_position[1]):
             return True
         else:
             return self.target.position == self.end_position
 
 
-    def check_bounds(self):
+    def check_bounds(self, x = None, y = None):
         """
         Check boundaries of window
+        Returns True if out of bounds
         """
-        if self.target.x < self.x_min:
-            self.target.x = self.x_min
-            self.target.direction = 0
-        elif self.target.x > self.x_max:
-            self.target.x = self.x_max
-            self.target.direction = 1
-        if self.target.y < self.y_min:
-            self.target.y = self.y_min
-            self.target.direction = 2
-        elif self.target.y > self.y_max:
-            self.target.y = self.y_max
-            self.target.direction = 3
+        if x == None or y == None:
+            if self.target.x < self.x_min:
+                self.target.x = self.x_min
+                self.target.direction = 0
+                return True
+            elif self.target.x > self.x_max:
+                self.target.x = self.x_max
+                self.target.direction = 1
+                return True
+            if self.target.y < self.y_min:
+                self.target.y = self.y_min
+                self.target.direction = 2
+                return True
+            elif self.target.y > self.y_max:
+                self.target.y = self.y_max
+                self.target.direction = 3
+                return True
+            return False
+        else:
+            if x < self.x_min or x > self.x_max:
+                return True
+            elif y < self.y_min or y > self.y_max:
+                return True
+            else:
+                return False
+
+
+
+
+    def checkbounds(self, x, y):
+        if x < self.x_min:
+            return True
+        elif x > self.x_max:
+            return True
+        if y < self.y_min:
+            return True
+        elif y > self.y_max:
+            return True
+        return False
+
 
 
 class MoveBy(MoveTo):

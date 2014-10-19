@@ -7,6 +7,8 @@ class Cell(physicalobject.PhysicalObject):
     """
     Cells! The main objects in the game
     """
+
+
     def __init__(self, *args, **kwargs):
         """
         Constructor for Cell
@@ -22,7 +24,6 @@ class Cell(physicalobject.PhysicalObject):
         self.energy_max = 100
 
 
-
     def update(self, dt):
         """
         Update Cell
@@ -32,9 +33,6 @@ class Cell(physicalobject.PhysicalObject):
             self.behavior()
         elif self.action.done() == True:
             self.behavior()
-
-
-
 
 
     def behavior(self):
@@ -50,9 +48,11 @@ class Cell(physicalobject.PhysicalObject):
     def acquirefood(self):
         if not self.target == None and self.target.dead == False:
             self.pathfind()
+            self.last_target = self.target
+            self.target = None
         elif not self.last_target == None:
-            if self.nearfood():
-                self.eat()
+            self.eat()
+            self.last_target = None
         else:
             self.wander()
             self.search()
@@ -63,16 +63,13 @@ class Cell(physicalobject.PhysicalObject):
         Move in direction of target
         """
         self.action = self.do(movement.MoveTo(self.target.position))
-        #self.action = self.do(actions.Eat(self.target))
-        self.last_target = self.target
-        self.target = None
 
 
     def wander(self):
         """
         Wander aimlessly
         """
-        self.action = self.do(movement.MoveBy((random.randint(-50, 50), (random.randint(-50, 50)))))
+        self.action = self.do(movement.MoveBy((random.randint(-30, 30), (random.randint(-30, 30)))))
 
 
     def search(self):
@@ -92,18 +89,6 @@ class Cell(physicalobject.PhysicalObject):
                                 self.target = obj
                                 print "target found:"
                                 print obj.Type, obj.position
-
-    def nearfood(self):
-        """
-        Last check to make sure we don't start eating without
-        food colliding with cell
-        """
-        other_object = self.last_target
-        collision_distance = (self.image.width * 0.5 * self.scale + \
-                         other_object.scale * other_object.image.width * 0.5)
-        collision_distance_squared = collision_distance ** 2
-        actual_distance_squared = util.distance(self.position, other_object.position)
-        return (actual_distance_squared <= collision_distance_squared)
 
 
     def eat(self):
