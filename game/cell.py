@@ -8,7 +8,6 @@ class Cell(physicalobject.PhysicalObject):
     Cells! The main objects in the game
     """
 
-
     def __init__(self, *args, **kwargs):
         """
         Constructor for Cell
@@ -46,6 +45,9 @@ class Cell(physicalobject.PhysicalObject):
 
 
     def acquirefood(self):
+        """
+        Process of acquiring food
+        """
         if not self.target == None and self.target.dead == False:
             self.pathfind()
             self.last_target = self.target
@@ -90,10 +92,15 @@ class Cell(physicalobject.PhysicalObject):
 
 
     def eat(self):
+        """
+        Set action to eating
+        """
         self.action = actions.Eat(self.last_target)
-        self.last_target = None
 
 
     def handle_collision_with(self, other_object):
+        """
+        Collision handler for cells
+        """
         if other_object.Type == 'food':
             self.energy += 1

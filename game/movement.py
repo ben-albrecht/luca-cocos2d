@@ -6,7 +6,20 @@ Rewriting my own movement classes because I don't like the Cocos Defaults
 """
 
 class MoveTo(cocos.actions.base_actions.Action):
+    """
+    Given a set of coordinates, objects will move to these coordinates
+    Future - make this dependent on object max_velocities in x and y
+
+    Note:
+    It is beyond me how the fuck self.target is set.
+    I've searched all through the cocos source code and could not find it
+    Perhaps target is something intrinsic to python objects?
+    """
     def init(self, coords, *args, **kwargs):
+        """
+        Generic as possible, this is inherited
+        by all subclasses of MoveTo
+        """
         super(MoveTo, self).init(*args, **kwargs)
         self.coords = coords
         self.x_max, self.y_max = cocos.director.director.get_window_size()
@@ -21,6 +34,10 @@ class MoveTo(cocos.actions.base_actions.Action):
 
 
     def step(self, dt):
+        """
+        In one step, target moves 1 in x and y towards target
+        In future, this step will be velocity-dependent
+        """
         x = self.target.position[0]
         y = self.target.position[1]
         if self.end_position[0] > x:
@@ -89,6 +106,11 @@ class MoveTo(cocos.actions.base_actions.Action):
 
 
     def checkbounds(self, x, y):
+        """
+        Check to verify x and y are not out of bounds
+        This method is specifically for checking destination coordinates
+        to verify that we are not going to pathfind to a destination out of bounds
+        """
         if x < self.x_min:
             return True
         elif x > self.x_max:
@@ -102,10 +124,20 @@ class MoveTo(cocos.actions.base_actions.Action):
 
 
 class MoveBy(MoveTo):
+    """
+    MoveTo subclass with relative coordinates rather than absolute
+    """
     def init(self, coords):
+        """
+        Always inherit the super.init of MoveTo
+        """
         super(MoveBy, self).init(coords)
 
     def start(self):
+        """
+        Translate our relative coordinates into absolute coordinates
+        and then MoveTo superclass will handle the rest
+        """
         x = self.target.position[0] + self.coords[0]
         y = self.target.position[1] + self.coords[1]
         self.end_position = x, y
@@ -113,13 +145,22 @@ class MoveBy(MoveTo):
 
 
 class RandomWalk(cocos.actions.Move):
+    """
+    Random Walk motion, step +/- 0.5 in any direction per step
+    """
     def step(self, dt):
+        """
+        Call random method every step
+        """
         super(Move, self).step(dt)
         self.random()
 
 
     def random(self):
-        """ random walk code"""
+        """
+        Random walk code - supposedly a very efficien way of doing this
+        I chose 0.5, because steps of 1 looked too big
+        """
         if bool(random.getrandbits(1)):
             if bool(random.getrandbits(1)):
                 self.target.set_position(self.target.position[0]+.05, self.target.position[1])

@@ -15,6 +15,9 @@ class Food(physicalobject.PhysicalObject):
 
 
     def handle_collision_with(self, other_object):
+        """
+        Collision handler for food
+        """
         if other_object.Type == 'cell':
             if other_object.energy < other_object.energy_max-5:
                 if self.scale < 0.2:

@@ -7,7 +7,9 @@ from game.colors import *
 import random
 
 class MainMenu( cocos.menu.Menu ):
-
+    """
+    Main menu that player sees first when game starts
+    """
     def __init__(self):
         super( MainMenu, self).__init__('LUCA')
 

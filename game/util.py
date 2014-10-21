@@ -24,8 +24,11 @@ def center_image(image):
 
 
 def get_dimensions():
+    """
+    Get dimensions of monitor
+    I don't think I need this for Cocos2d
+    """
     # TODO: test on Mac & Windows
-    # Unnecessary?
     if sys.platform == 'darwin':
         # Mac
         #print NSScreen.mainScreen().frame()
@@ -46,6 +49,9 @@ def get_dimensions():
 
 
 def module_exists(module_name):
+    """
+    Check that module exists, if not, throw an error
+    """
     try:
         __import__(module_name)
     except ImportError:
@@ -55,6 +61,11 @@ def module_exists(module_name):
 
 
 def record():
+    """
+    TODO
+    Take screenshots every step (= some integer number of frames)
+    Would I call my own scheduler for this?
+    """
     pass
     # One Screen Shot: on key press - start, stop
     #import time
