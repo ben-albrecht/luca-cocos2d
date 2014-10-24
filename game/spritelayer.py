@@ -165,4 +165,4 @@ class SpriteLayer( cocos.layer.Layer ):
         for obj in ( i[1] for i in self.children):
             if obj.Type == 'cell':
                 obj.get_objlist(self.children)
-        
+

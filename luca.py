@@ -19,7 +19,8 @@ if __name__ == "__main__":
     spritelayer = spritelayer.SpriteLayer()
 
     # Instantiate background layer - just a colored layer
-    backgroundlayer = cocos.layer.ColorLayer(base3[0], base3[1], base3[2], 255)
+    #   Note: The * (splat operator) unpacks the tuple returned by rgba()
+    backgroundlayer = cocos.layer.ColorLayer(*rgba(base3))
 
     # Instantiate main menu layer - main menu at start of game
     mainmenulayer = menu.MainMenu()

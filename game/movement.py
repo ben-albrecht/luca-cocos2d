@@ -14,6 +14,7 @@ class MoveTo(cocos.actions.base_actions.Action):
     It is beyond me how the fuck self.target is set.
     I've searched all through the cocos source code and could not find it
     Perhaps target is something intrinsic to python objects?
+    Or is it function `do`?
     """
     def init(self, coords, *args, **kwargs):
         """
@@ -65,7 +66,7 @@ class MoveTo(cocos.actions.base_actions.Action):
         """
         if self.target == None:
             return True
-        elif self.check_bounds(self.end_position[0], self.end_position[1]):
+        elif self.check_bounds(*self.end_position):
             return True
         else:
             return self.target.position == self.end_position
@@ -110,16 +111,14 @@ class MoveTo(cocos.actions.base_actions.Action):
         Check to verify x and y are not out of bounds
         This method is specifically for checking destination coordinates
         to verify that we are not going to pathfind to a destination out of bounds
+        Return True if out of bounds
         """
-        if x < self.x_min:
+        if self.x_max < x < self.x_min:
             return True
-        elif x > self.x_max:
+        elif self.y_max < y < self.y_min:
             return True
-        if y < self.y_min:
-            return True
-        elif y > self.y_max:
-            return True
-        return False
+        else:
+            return False
 
 
 
