@@ -26,6 +26,7 @@ if __name__ == "__main__":
     mainmenulayer = menu.MainMenu()
 
     #sidemenulayer = menu.SideMenu()
+    sidemenulayer = menu.ScoreLayer()
     # Add our layers in a multiplex (only 1 layer per multiplex can be visible at a time)
     # The default visible layer is the first in the multiplex (mainmenu)
     # This multiplex layer is indexed z = 1
@@ -36,6 +37,7 @@ if __name__ == "__main__":
                                                  z=1)
     # Add background, always visible, indexed at z = 0
     scene.add( backgroundlayer, z=0)
+    scene.add( sidemenulayer, z=2)
 
 
     # DEBUG - shows what key is pressed and mouse coords

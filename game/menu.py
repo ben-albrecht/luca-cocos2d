@@ -6,6 +6,10 @@ from pyglet.window import key
 from game.colors import *
 import random
 
+
+from cocos.layer import *
+from cocos.text import *
+from cocos.actions import *
 class MainMenu( cocos.menu.Menu ):
     """
     Main menu that player sees first when game starts
@@ -61,58 +65,49 @@ class MainMenu( cocos.menu.Menu ):
         pyglet.app.exit()
 
 
-
-class SideMenu( cocos.menu.Menu ):
-    """
-    Menu on the side of game for information and interaction with game
-    WORK IN PROGRESS
-    """
+class ScoreLayer( Layer ):
     def __init__(self):
-        super( SideMenu, self).__init__('LUCA')
+        w,h = director.get_window_size()
+        super( ScoreLayer, self).__init__()
 
-        x,y = cocos.director.director.get_window_size()
-        x = x - 0.25*x
-        self._set_position((x, y))
-        self._set_scale_x(0.25)
+        # transparent layer
+        self.add( ColorLayer(32,32,32,32, width=w, height=48),z=-1 )
 
-        self.font_title['font_name'] = 'Edit Undo Line BRK'
-        self.font_title['font_size'] = 72
-        self.font_title['color'] = rgba(base03)
+        self.position = (0,h-48)
 
-        self.font_item['font_name'] = 'Edit Undo Line BRK',
-        self.font_item['color'] = rgba(base03)
-        self.font_item['font_size'] = 32
-        self.font_item_selected['font_name'] = 'Edit Undo Line BRK'
-        self.font_item_selected['color'] = rgba(color[random.randint(0,7)])
-        self.font_item_selected['font_size'] = 46
+        self.score=  Label('Score:', font_size=36,
+                font_name='Edit Undo Line BRK',
+                color=(255,255,255,255),
+                anchor_x='left',
+                anchor_y='bottom')
+        self.score.position=(0,0)
+        self.add( self.score)
 
+        self.lines=  Label('Lines:', font_size=36,
+                font_name='Edit Undo Line BRK',
+                color=(255,255,255,255),
+                anchor_x='left',
+                anchor_y='bottom')
+        self.lines.position=(235,0)
+        self.add( self.lines)
 
-        # example: menus can be vertical aligned and horizontal aligned
-        self.menu_anchor_y = CENTER
-        self.menu_anchor_x = CENTER
+        self.lvl=  Label('Lvl:', font_size=36,
+                font_name='Edit Undo Line BRK',
+                color=(255,255,255,255),
+                anchor_x='left',
+                anchor_y='bottom')
 
-        items = []
+        self.lvl.position=(450,0)
+        self.add( self.lvl)
 
-        # items.append( MenuItem('New Game', self.on_new_game) )
-        #items.append( MenuItem('Options', self.on_options) )
-        #items.append( MenuItem('Scores', self.on_scores) )
-        items.append( MenuItem('Quit', self.on_quit) )
+    def draw(self):
+        super( ScoreLayer, self).draw()
+        self.score.element.text = 'Score:%d' % 10
+        self.lines.element.text = 'Lines:%d' % 5 #max(0, (status.level.lines - status.lines))
 
-        self.create_menu( items, shake(), shake_back() )
+        #lvl = status.level_idx or 0
+        lvl = 0
+        self.lvl.element.text = 'Lvl:%d' % lvl
 
-
-    def on_new_game(self):
-        self.parent.switch_to(1)
-
-    def on_options( self ):
-        # This used to be new game... need to figure out how this works
-        import gameview
-        director.push( FlipAngular3DTransition(
-            gameview.get_newgame(), 1.5 ) )
-
-
-    #def on_scores( self ):
-    #    self.parent.switch_to(2)
-
-    def on_quit(self):
-        pyglet.app.exit()
+        #if status.next_piece:
+        #    status.next_piece.draw()
