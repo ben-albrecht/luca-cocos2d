@@ -10,11 +10,6 @@ class MoveTo(cocos.actions.base_actions.Action):
     Given a set of coordinates, objects will move to these coordinates
     Future - make this dependent on object max_velocities in x and y
 
-    Note:
-    It is beyond me how the fuck self.target is set.
-    I've searched all through the cocos source code and could not find it
-    Perhaps target is something intrinsic to python objects?
-    Or is it function `do`?
     """
     def init(self, coords, *args, **kwargs):
         """
@@ -157,7 +152,7 @@ class RandomWalk(cocos.actions.Move):
 
     def random(self):
         """
-        Random walk code - supposedly a very efficien way of doing this
+        Random walk code - supposedly a very efficient way of doing this
         I chose 0.5, because steps of 1 looked too big
         """
         if bool(random.getrandbits(1)):

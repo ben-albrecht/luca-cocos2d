@@ -25,6 +25,7 @@ if __name__ == "__main__":
     # Instantiate main menu layer - main menu at start of game
     mainmenulayer = menu.MainMenu()
 
+    #sidemenulayer = menu.SideMenu()
     # Add our layers in a multiplex (only 1 layer per multiplex can be visible at a time)
     # The default visible layer is the first in the multiplex (mainmenu)
     # This multiplex layer is indexed z = 1
@@ -36,9 +37,13 @@ if __name__ == "__main__":
     # Add background, always visible, indexed at z = 0
     scene.add( backgroundlayer, z=0)
 
+
     # DEBUG - shows what key is pressed and mouse coords
     # scene.add( mousedisplay.MouseDisplay(), z = 2)
-    # scene.add( keydisplay.KeyDisplay(), z = 3)
+    scene.add( keydisplay.KeyDisplay(), z = 3)
 
     # Tell director to run our scene (start game!)
     director.run( scene )
+
+
+

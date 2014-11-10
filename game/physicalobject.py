@@ -74,6 +74,18 @@ class PhysicalObject(cocos.sprite.Sprite):
             pass
 
 
+    def hit_test(self, x, y):
+        """ Is the coordinates (x,y) within the object bounds? """
+        if x < self.x + self.image.width*self.scale/2 and \
+            x > self.x - self.image.width*self.scale/2 and \
+            y < self.y + self.image.height*self.scale/2 and \
+            y > self.y - self.image.height*self.scale/2:
+                print "Object Hit!"
+                return True
+        else:
+            return False
+
+
     def update(self, dt):
         self.time += 1
         """

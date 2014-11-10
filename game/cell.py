@@ -17,10 +17,13 @@ class Cell(physicalobject.PhysicalObject):
         self.target = None
         self.last_target = None
         self.action = None
-        # Whether or not we are eating
+        # string version of Type
         self.Type = 'cell'
+
+        # Cell Stats
         self.energy = 50
         self.energy_max = 100
+
 
 
     def update(self, dt):
