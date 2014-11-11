@@ -266,6 +266,7 @@ class SpriteLayer( cocos.layer.Layer ):
     def key_manager(self):
         """
         Key manager for keys to repeat while held down
+        TODO: Prevent viewing out of bounds
         """
         for symbol in self.keys_pressed:
             # Camera Navigation with key arrows, WASD, and HJKL
@@ -282,6 +283,7 @@ class SpriteLayer( cocos.layer.Layer ):
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         """
         Drag mouse to move around map
+        TODO: Prevent viewing out of bounds
         """
         if buttons & mouse.LEFT:
             #if self.ymin < self.y < self.ymax:
@@ -292,9 +294,14 @@ class SpriteLayer( cocos.layer.Layer ):
 
 
     def on_mouse_scroll(self, x, y, scroll_x, scroll_y):
+        """
+        Mouse Scrolling
+        Scroll up = zoom in and vice versa
+        TODO: Prevent zooming out of bounds
+        """
         self.camera._set_eye(cocos.euclid.Point3(self.camera.eye[0],
                              self.camera.eye[1],
-                             self.camera.eye[2] + self.camera.eye[2] * scroll_y / 10 ))
+                             self.camera.eye[2] - self.camera.eye[2] * scroll_y / 10 ))
 
 
 
