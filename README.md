@@ -2,10 +2,13 @@ luca-cocos2d
 ============
 
 Last Universal Common Ancestor
-A Microbial Life Simulation Made For Fun
+[A Microbial Life Simulation Made For Fun](http://exit-1.github.io/luca-cocos2d/)
 
+Dependencies (Available on pip):
+pyglet
+cocos2d
+sphinx (for building documentation)
 
-http://exit-1.github.io/luca-cocos2d/
 
 Where we are:
 
