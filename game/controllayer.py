@@ -42,6 +42,9 @@ class ControlLayer( layer.Layer ):
         self.ymin = self.y_max - 10
         self.ymax = self.y_max + 10
 
+        self.i = 0
+
+
     def begin(self):
         """
         This must be called after layer is added to scene,
@@ -55,22 +58,39 @@ class ControlLayer( layer.Layer ):
         self.key_manager()
 
 
+
     def on_mouse_press(self, x, y, button, modifiers):
         """
         Check to see if a game entity has been clicked
+
+        TODO:
+            Ein Kleine Problem - x and y coordinates need to be scaled
+                according to current camera zoom
+            This is actually kind of hard to figure out
         """
-        targetclicked = False
+        if button & mouse.LEFT:
 
-        # Undo previous click
-        self.undo_click()
+            # Account for x and y offset of spritelayer view
+            x -= self.spritelayer.x
+            y -= self.spritelayer.y
 
-        # Find out what was clicked
-        for obj in (i[1] for i in self.spritelayer.children):
-            if  obj.contains(x, y):
-                targetclicked = True
-                self.lastobj = obj
-                break
-        self.handle_click(targetclicked)
+            # Will set true if object detected under mouse
+            targetclicked = False
+
+            # Undo previous click
+            self.undo_click()
+
+            print self.spritelayer.camera.eye[2]
+            print x, y
+            # Find out what was clicked
+            for obj in (i[1] for i in self.spritelayer.children):
+                if  obj.contains(x, y):
+                    print "object:"
+                    print obj.x, obj.y
+                    targetclicked = True
+                    self.lastobj = obj
+                    break
+            self.handle_click(targetclicked)
 
 
     def handle_click(self, targetclicked):
@@ -156,13 +176,14 @@ class ControlLayer( layer.Layer ):
                 self.spritelayer.x += 3
 
 
-    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
+    def on_mouse_drag(self, x, y, dx, dy, button, modifier):
         """
         Drag mouse to move around map
 
         TODO: Prevent viewing out of bounds
         """
-        if buttons & mouse.LEFT:
+        if button & mouse.RIGHT:
+            print "on_mouse_drag"
             #if self.ymin < self.y < self.ymax:
             self.spritelayer.y += dy
             #if self.xmin < self.x < self.xmax:
@@ -175,8 +196,11 @@ class ControlLayer( layer.Layer ):
         Mouse Scrolling
         Scroll up = zoom in and vice versa
         TODO: Prevent zooming out of bounds
+
         """
-        self.camera._set_eye(euclid.Point3(self.spritelayer.camera.eye[0],
+        #print self.spritelayer.camera.eye[2]
+        #print x, y
+        self.spritelayer.camera._set_eye(euclid.Point3(self.spritelayer.camera.eye[0],
                              self.spritelayer.camera.eye[1],
                              self.spritelayer.camera.eye[2] - self.spritelayer.camera.eye[2] * scroll_y / 10 ))
 
