@@ -1,5 +1,4 @@
-import cocos
-from game import physicalobject, resources, movement, util, actions
+from game import physicalobject, resources, movement, util, actions, food
 import random
 
 
@@ -8,7 +7,7 @@ class Cell(physicalobject.PhysicalObject):
     Cells! The main objects in the game
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, energy = 50, *args, **kwargs):
         """
         Constructor for Cell
         """
@@ -21,8 +20,9 @@ class Cell(physicalobject.PhysicalObject):
         self.Type = 'cell'
 
         # Cell Stats
-        self.energy = 50
+        self.energy = energy
         self.energy_max = 100
+        self.age = 1
 
 
 
@@ -30,11 +30,53 @@ class Cell(physicalobject.PhysicalObject):
         """
         Update Cell
         """
+        self.alive()
         super(Cell, self).update(dt)
+        self.timers()
         if self.action == None:
             self.behavior()
         elif self.action.done() == True:
             self.behavior()
+
+
+    def alive(self):
+        """
+        Check to see if cell is still alive
+        """
+        if self.energy <= 0:
+            self.dead = True
+
+
+    def timers(self):
+        """
+        All timer intervals listed here
+        """
+        if self.time % 100 == 0:
+            self.age += 1
+            self.energy += -1
+        if self.time % 120 == 0:
+            if self.reproductive():
+                self.reproduce()
+
+
+    def reproductive(self):
+        print "stats"
+        print "energy", self.energy
+        print "age", self.age
+        if self.energy > 80 and self.age > 20:
+            return True
+        else:
+            return False
+
+    def reproduce(self):
+        """
+        Create a new cell and lose some energy
+        """
+        newcell = Cell(position=(self.x, self.y), color=self.color, energy = 30)
+        self.new_obj.append(newcell)
+        self.energy += -40
+
+
 
 
     def behavior(self):
@@ -107,3 +149,11 @@ class Cell(physicalobject.PhysicalObject):
         """
         if other_object.Type == 'food':
             self.energy += 1
+
+    def delete(self):
+        """
+        Handle Cell Death
+        """
+        super(Cell, self).delete()
+        newfood = food.Food(position=(self.x, self.y))
+        self.new_obj.append(newfood)

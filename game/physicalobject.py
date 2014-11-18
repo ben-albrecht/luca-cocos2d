@@ -13,11 +13,15 @@ class PhysicalObject(cocos.sprite.Sprite):
         self.x_max, self.y_max = cocos.director.director.get_window_size()
         self.x_min, self.y_min = 0, 0
         self.Type = 'null'
-        self.dead = False
-        self.new_obj = []
         self.time = 0
+
+        # List of objects retrieved from SpriteLayer
         self.objects = []
 
+        # SpriteLayer checks this for new objects to add
+        self.new_obj = []
+        # Checked in SpriteLayer to determine what to delete
+        self.dead = False
 
     def get_objlist(self, objects):
         """

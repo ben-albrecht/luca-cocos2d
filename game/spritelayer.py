@@ -60,8 +60,8 @@ class SpriteLayer( layer.Layer ):
         self.spawn(10, Type = 'cell')
         """
         self.add(cell.Cell(position=(300,300), color=colors.blue))
-        self.add(cell.Cell(position=(300,300), color=colors.blue))
-        self.add(cell.Cell(position=(300,300), color=colors.blue))
+        self.add(cell.Cell(position=(300,300), color=colors.green))
+        self.add(cell.Cell(position=(300,300), color=colors.orange))
         #self.children[0][1].get_objlist(self.children)
 
         #self.add(cell.Cell(position=(300,200), color=colors.blue))
@@ -129,6 +129,7 @@ class SpriteLayer( layer.Layer ):
             for obj in to_add:
                 self.add(obj)
 
+        to_add = []
 
     def check_collisions(self):
         """
@@ -154,19 +155,23 @@ class SpriteLayer( layer.Layer ):
         """
         for obj in (i[1] for i in self.children):
             obj.update(dt)
+            to_add.extend(obj.new_obj)
+            obj.new_obj = []
+        return to_add
 
 
     def remove_dead(self, to_add):
         """
         Remove objects that are dead
         """
-        for to_remove in (i[1] for i in self.children if i[1].dead):
+        for obj in (i[1] for i in self.children if i[1].dead):
             # This adds anything the dead object leaves behind before it is removed
-            #to_add.extend(to_remove.new_obj)
+            to_add.extend(obj.new_obj)
+            obj.new_obj = []
             # This takes objects off self.children tuple, and updates objects' tuples
-            self.remove(to_remove)
+            self.remove(obj)
             # This calls the dead object's deconstructor, and it ceases to exist from this point on
-            to_remove.delete()
+            obj.delete()
         return to_add
 
 
@@ -180,9 +185,11 @@ class SpriteLayer( layer.Layer ):
             if obj.Type == 'cell':
                 obj.get_objlist(self.children)
 
+
     def add(self, child):
         """
-        Update children list in each relevant object as well
+        Normal Function: Adds children nodes to this node (add sprite objects)
+        Additional Functionality: Update children list in each relevant object
         """
         super(SpriteLayer, self).add(child)
         for obj in (i[1] for i in self.children):

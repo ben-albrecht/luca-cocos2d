@@ -106,7 +106,7 @@ class ControlLayer( layer.Layer ):
 
             # Make the object clicked turn red
             self.lastobj.color = (240, 30, 30)
-            print "obj clicked"
+            #print "obj clicked"
 
             if not self.lastobj.Type == 'food':
                 # Change to POV of this object
@@ -183,7 +183,7 @@ class ControlLayer( layer.Layer ):
         TODO: Prevent viewing out of bounds
         """
         if button & mouse.RIGHT:
-            print "on_mouse_drag"
+            #print "on_mouse_drag"
             #if self.ymin < self.y < self.ymax:
             self.spritelayer.y += dy
             #if self.xmin < self.x < self.xmax:
