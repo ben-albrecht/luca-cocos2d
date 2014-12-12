@@ -6,7 +6,7 @@ from game import resources, colors, physicalobject, cell, food
 from pyglet.window import key, mouse
 
 
-class SpriteLayer( layer.Layer ):
+class SpriteLayer( layer.ScrollableLayer ):
     """"
     Layer to hold all and manage
     sprites in game window
@@ -28,6 +28,7 @@ class SpriteLayer( layer.Layer ):
 
         # Get coordinates of upper right corner (max size)
         self.x_max, self.y_max = director.director.get_window_size()
+        self.width, self.height = director.director.get_window_size()
         print "Game Dimensions: ", self.x_max,"x", self.y_max
 
         # Load objects into the game - spawns cells, food, etc.

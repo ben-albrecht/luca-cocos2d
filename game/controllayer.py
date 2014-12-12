@@ -1,7 +1,8 @@
 from cocos import layer, director, euclid
 from pyglet.window import key, mouse
+import weakref
 
-class ControlLayer( layer.Layer ):
+class ControlLayer( layer.ScrollingManager ):
     """
     This layer manages the controls of the game
     Mouse and Keyboard inputs only
@@ -36,13 +37,14 @@ class ControlLayer( layer.Layer ):
         self.schedule(self.key_update)
 
         # Screen Management
-        self.x_max, self.y_max = director.director.get_window_size()
-        self.xmin = self.x_max - 10
-        self.xmax = self.x_max + 10
-        self.ymin = self.y_max - 10
-        self.ymax = self.y_max + 10
+        w, h = director.director.get_window_size()
+        self.xmin = w - 10
+        self.xmax = w + 10
+        self.ymin = h - 10
+        self.ymax = h + 10
 
         self.i = 0
+
 
 
     def begin(self):
@@ -53,6 +55,20 @@ class ControlLayer( layer.Layer ):
         self.spritelayer = self.parent.spritelayer
         hudlayer = self.parent.hudlayer
 
+        """
+        proto-editor stuff
+        scroller = scrolling manager
+        worldview = scrollable layer
+        """
+
+        self.wwidth = self.spritelayer.width
+        self.wheight = self.spritelayer.height
+        self.pixel_to_screen    #world_to_screen
+        self.pixel_from_screen  #screen_to_world
+
+        self.spritelayer.camera.restore()
+        self.spritelayer.x, self.spritelayer.y = 0, 0
+        self.zoom_fastness = 1.0
 
     def key_update(self, dt):
         self.key_manager()
@@ -68,11 +84,18 @@ class ControlLayer( layer.Layer ):
                 according to current camera zoom
             This is actually kind of hard to figure out
         """
+
+        print x, y
+        self.world_mouse = self.pixel_from_screen(x, y)
+        x, y = self.world_mouse
+        x, y = self.pixel_to_screen(x, y)
+        #self.screen_mouse = self.pixel_to_screen(x, y)
+        print 'updated', x, y
         if button & mouse.LEFT:
 
             # Account for x and y offset of spritelayer view
-            x -= self.spritelayer.x
-            y -= self.spritelayer.y
+            #x -= self.spritelayer.x
+            #y -= self.spritelayer.y
 
             # Will set true if object detected under mouse
             targetclicked = False
@@ -80,8 +103,9 @@ class ControlLayer( layer.Layer ):
             # Undo previous click
             self.undo_click()
 
-            print self.spritelayer.camera.eye[2]
-            print x, y
+            #print self.spritelayer.camera.eye[2]
+            #print 'screen', self.screen_mouse[0], self.screen_mouse[1]
+
             # Find out what was clicked
             for obj in (i[1] for i in self.spritelayer.children):
                 if  obj.contains(x, y):
@@ -182,13 +206,13 @@ class ControlLayer( layer.Layer ):
 
         TODO: Prevent viewing out of bounds
         """
-        if button & mouse.RIGHT:
-            #print "on_mouse_drag"
-            #if self.ymin < self.y < self.ymax:
-            self.spritelayer.y += dy
-            #if self.xmin < self.x < self.xmax:
-            self.spritelayer.x += dx
-            #print self.spritelayer.x, self.spritelayer.y
+        if button & mouse.RIGHT or (button & mouse.LEFT and key.M in self.keys_pressed):
+            self.spritelayer.set_view(self.spritelayer.view_x + dx, self.spritelayer.view_y + dy, self.spritelayer.width, self.spritelayer.height)
+
+            #self.spritelayer.camera._set_eye(euclid.Point3(self.spritelayer.camera.eye[0] + dx,
+            #                 self.spritelayer.camera.eye[1] + dy,
+            #                 self.spritelayer.camera.eye[2]))
+
 
 
     def on_mouse_scroll(self, x, y, scroll_x, scroll_y):
@@ -200,10 +224,59 @@ class ControlLayer( layer.Layer ):
         """
         #print self.spritelayer.camera.eye[2]
         #print x, y
+
+        #self.set_focus(self.wwidth, self.wheight)
+        ##self.wwidth = self.spritelayer.width
+        ##self.wheight = self.spritelayer.height
+        #zoom = self.spritelayer.scale + -0.016666 * scroll_y
+        #self.spritelayer.scale = zoom
+
+
+        #self.update_zoom(scroll_y)
         self.spritelayer.camera._set_eye(euclid.Point3(self.spritelayer.camera.eye[0],
                              self.spritelayer.camera.eye[1],
                              self.spritelayer.camera.eye[2] - self.spritelayer.camera.eye[2] * scroll_y / 10 ))
 
+
+
+    """
+    proto-editor stuff
+    """
+    """
+    def mouse_into_world(self):
+        #worldview = self.weak_worldview()
+        #? allow lower limits != 0 ?
+        return ( (0 <= self.world_mouse[0] <= self.spritelayer.width) and
+                 (0 <= self.world_mouse[1] <= self.spritelayer.height))
+
+
+    def update_zoom(self, dz):
+        if self.mouse_into_world():
+            wzoom_center = self.world_mouse
+            szoom_center = self.screen_mouse
+        else:
+            # decay to scroller unadorned
+            wzoom_center = None
+        #if self.wheel !=0:
+        #    dt_dz = 0.01666666 * self.wheel
+        #    self.wheel = 0
+        #else:
+            dt_dz = 0.01666666 * dz
+        #scroller = self.weak_scroller()
+        zoom = self.scale + dt_dz * self.zoom_fastness
+        #if zoom < self.zoom_min:
+        #    zoom = self.zoom_min
+        #elif zoom > self.zoom_max:
+        #    zoom = self.zoom_max
+        self.scale = zoom
+        #if wzoom_center is not None:
+        #    # postprocess toward 'world point under mouse the same before
+        #    # and after zoom' ; other restrictions may prevent fully comply
+        #    wx1, wy1 = screen_to_world(*szoom_center)
+        #    fx = self.restricted_fx + (wzoom_center[0] - wx1)
+        #    fy = self.restricted_fy + (wzoom_center[1] - wy1)
+        #    self.set_focus(fx, fy)
+    """
 
 
     def on_key_release (self, symbol, modifiers):

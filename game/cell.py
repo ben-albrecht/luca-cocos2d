@@ -60,9 +60,9 @@ class Cell(physicalobject.PhysicalObject):
 
 
     def reproductive(self):
-        print "stats"
-        print "energy", self.energy
-        print "age", self.age
+        #print "stats"
+        #print "energy", self.energy
+        #print "age", self.age
         if self.energy > 80 and self.age > 20:
             return True
         else:
