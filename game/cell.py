@@ -7,10 +7,15 @@ class Cell(physicalobject.PhysicalObject):
     Cells! The main objects in the game
     """
 
-    def __init__(self, energy = 50, *args, **kwargs):
+    def __init__(self, energy=30, *args, **kwargs):
         """
         Constructor for Cell
         """
+        # Cell Stats
+        self.energy = energy
+        self.energy_max = 100
+        self.age = 1
+
         super(Cell, self).__init__(resources.cell_image, *args, **kwargs)
         self.hungry = True
         self.target = None
@@ -18,12 +23,6 @@ class Cell(physicalobject.PhysicalObject):
         self.action = None
         # string version of Type
         self.Type = 'cell'
-
-        # Cell Stats
-        self.energy = energy
-        self.energy_max = 100
-        self.age = 1
-
 
 
     def update(self, dt):
@@ -38,14 +37,12 @@ class Cell(physicalobject.PhysicalObject):
         elif self.action.done() == True:
             self.behavior()
 
-
     def alive(self):
         """
         Check to see if cell is still alive
         """
         if self.energy <= 0:
             self.dead = True
-
 
     def timers(self):
         """
@@ -54,16 +51,16 @@ class Cell(physicalobject.PhysicalObject):
         if self.time % 100 == 0:
             self.age += 1
             self.energy += -1
-        if self.time % 120 == 0:
+        # % 120
+        if self.time % 10 == 0:
             if self.reproductive():
                 self.reproduce()
-
 
     def reproductive(self):
         #print "stats"
         #print "energy", self.energy
         #print "age", self.age
-        if self.energy > 80 and self.age > 20:
+        if self.energy > 30 and self.age > 2:
             return True
         else:
             return False
@@ -72,12 +69,13 @@ class Cell(physicalobject.PhysicalObject):
         """
         Create a new cell and lose some energy
         """
-        newcell = Cell(position=(self.x, self.y), color=self.color, energy = 30)
+        # TODO: Derive new attributes from previous attributes
+        newattributes = {}
+        newattributes['energy'] = 30
+
+        newcell = Cell(position=(self.x, self.y), color=self.color, attributes=newattributes)
         self.new_obj.append(newcell)
         self.energy += -40
-
-
-
 
     def behavior(self):
         """
@@ -104,20 +102,17 @@ class Cell(physicalobject.PhysicalObject):
             self.wander()
             self.search()
 
-
     def pathfind(self):
         """
         Move in direction of target
         """
         self.action = self.do(movement.MoveTo(self.target.position))
 
-
     def wander(self):
         """
         Wander aimlessly
         """
         self.action = self.do(movement.MoveBy((random.randint(-30, 30), (random.randint(-30, 30)))))
-
 
     def search(self):
         """
@@ -135,13 +130,11 @@ class Cell(physicalobject.PhysicalObject):
                             if obj.Type == 'food':
                                 self.target = obj
 
-
     def eat(self):
         """
         Set action to eating
         """
         self.action = actions.Eat(self.last_target)
-
 
     def handle_collision_with(self, other_object):
         """

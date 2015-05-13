@@ -48,18 +48,6 @@ def get_dimensions():
     return dim
 
 
-def module_exists(module_name):
-    """
-    Check that module exists, if not, throw an error
-    """
-    try:
-        __import__(module_name)
-    except ImportError:
-        return False
-    else:
-        return True
-
-
 def record():
     """
     TODO
@@ -70,4 +58,3 @@ def record():
     # One Screen Shot: on key press - start, stop
     #import time
     #pyglet.image.get_buffer_manager().get_color_buffer().save('screenshot-%d.png' % (int( time.time() ) ) )
-

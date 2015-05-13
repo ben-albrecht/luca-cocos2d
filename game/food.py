@@ -13,7 +13,6 @@ class Food(physicalobject.PhysicalObject):
         super(Food, self).__init__(resources.cell_image, color=colors.base02, *args, **kwargs)
         self.Type = 'food'
 
-
     def handle_collision_with(self, other_object):
         """
         Collision handler for food

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import cocos
 import random
 from cocos import layer, director
@@ -29,7 +30,7 @@ class SpriteLayer( layer.ScrollableLayer ):
         # Get coordinates of upper right corner (max size)
         self.x_max, self.y_max = director.director.get_window_size()
         self.width, self.height = director.director.get_window_size()
-        print "Game Dimensions: ", self.x_max,"x", self.y_max
+        print("Game Dimensions: ", self.x_max,"x", self.y_max)
 
         # Load objects into the game - spawns cells, food, etc.
         self.load()
@@ -38,7 +39,6 @@ class SpriteLayer( layer.ScrollableLayer ):
         self.schedule(self.update)
 
         self.update_pause = False
-
 
         # Mouse Management
         self.lastobj = None
@@ -60,12 +60,14 @@ class SpriteLayer( layer.ScrollableLayer ):
         Eventually this will call a general spawn function
         self.spawn(10, Type = 'cell')
         """
-        self.add(cell.Cell(position=(300,300), color=colors.blue))
-        self.add(cell.Cell(position=(300,300), color=colors.green))
-        self.add(cell.Cell(position=(300,300), color=colors.orange))
+        blueattribute = {'energy': 50, 'age': 2}
+        greenattribute = {'energy': 50}
+        orangeattribute = {'energy': 50}
+        self.add(cell.Cell(position=(300,300), color=colors.blue, attributes=blueattribute))
+        self.add(cell.Cell(position=(300,300), color=colors.green, attributes=greenattribute))
+        self.add(cell.Cell(position=(300,300), color=colors.orange, attributes=orangeattribute))
         #self.children[0][1].get_objlist(self.children)
 
-        #self.add(cell.Cell(position=(300,200), color=colors.blue))
         self.add(food.Food(position=(random.randint(250,350), random.randint(250,350))))
         self.add(food.Food(position=(random.randint(250,350), random.randint(250,350))))
         #self.add(food.Food(position=(random.randint(0, x), random.randint(0,y))))
@@ -89,7 +91,6 @@ class SpriteLayer( layer.ScrollableLayer ):
                 self.counter[self.indices[Type]] += 1
         """
 
-
     def update(self, dt):
         """
         Update all children of this layer per step
@@ -98,9 +99,6 @@ class SpriteLayer( layer.ScrollableLayer ):
         So to call first object's update member function we call
             self.children[0][1].update(dt)
         """
-        # NECESSARY FOR KEYS
-        #self.key_manager()
-
         if self.update_pause == True:
             return
 
@@ -149,7 +147,6 @@ class SpriteLayer( layer.ScrollableLayer ):
                                 obj_1.handle_collision_with(obj_2)
                                 obj_2.handle_collision_with(obj_1)
 
-
     def update_objects(self, dt, to_add):
         """
         Simple loop to update all objects in game
@@ -159,7 +156,6 @@ class SpriteLayer( layer.ScrollableLayer ):
             to_add.extend(obj.new_obj)
             obj.new_obj = []
         return to_add
-
 
     def remove_dead(self, to_add):
         """
@@ -175,7 +171,6 @@ class SpriteLayer( layer.ScrollableLayer ):
             obj.delete()
         return to_add
 
-
     def remove(self, child):
         """
         Update children list in each relevant object as well
@@ -186,7 +181,6 @@ class SpriteLayer( layer.ScrollableLayer ):
             if obj.Type == 'cell':
                 obj.get_objlist(self.children)
 
-
     def add(self, child):
         """
         Normal Function: Adds children nodes to this node (add sprite objects)
@@ -196,6 +190,3 @@ class SpriteLayer( layer.ScrollableLayer ):
         for obj in (i[1] for i in self.children):
             if obj.Type == 'cell':
                 obj.get_objlist(self.children)
-
-
-

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import cocos
 from game import util
 
@@ -7,7 +8,13 @@ class PhysicalObject(cocos.sprite.Sprite):
     Will handle collision checking, collision handling, and spawning
     """
     def __init__(self, *args, **kwargs):
+        if 'attributes' in kwargs:
+            for key, value in kwargs['attributes'].items():
+                setattr(self, key, value)
+            kwargs.pop('attributes')
         super(PhysicalObject, self).__init__(*args, **kwargs)
+
+
         self.direction = 0
         self.velocity = (0, 0)
         self.x_max, self.y_max = cocos.director.director.get_window_size()
@@ -33,13 +40,10 @@ class PhysicalObject(cocos.sprite.Sprite):
             self.objects = objects
             # Or is it faster to just update without checking?
 
-
-
-
-
     def collides_with(self, other_object):
         """
         Check if object collides with another object
+        TODO: Optimize more precisely - consider grid-based approach
         """
         if util.distance_x(self.position, other_object.position) <= 50:
             collision_distance = (self.image.width * 0.5 * self.scale + \
@@ -60,7 +64,6 @@ class PhysicalObject(cocos.sprite.Sprite):
     def handle_collision_with(self, other_object):
         """
         Default collision handler for objects of same type
-        (Elastic collision)
         """
 
         if other_object.Type == self.Type:
@@ -77,25 +80,22 @@ class PhysicalObject(cocos.sprite.Sprite):
         else:
             pass
 
-
     def hit_test(self, x, y):
         """ Is the coordinates (x,y) within the object bounds? """
         if x < self.x + self.image.width*self.scale/2 and \
             x > self.x - self.image.width*self.scale/2 and \
             y < self.y + self.image.height*self.scale/2 and \
             y > self.y - self.image.height*self.scale/2:
-                print "Object Hit!"
+                print("Object Hit!")
                 return True
         else:
             return False
-
 
     def update(self, dt):
         self.time += 1
         """
         temporarily nothing
         """
-
 
     def delete(self):
         """

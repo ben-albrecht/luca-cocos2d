@@ -45,8 +45,6 @@ class ControlLayer( layer.ScrollingManager ):
 
         self.i = 0
 
-
-
     def begin(self):
         """
         This must be called after layer is added to scene,
@@ -73,8 +71,6 @@ class ControlLayer( layer.ScrollingManager ):
     def key_update(self, dt):
         self.key_manager()
 
-
-
     def on_mouse_press(self, x, y, button, modifiers):
         """
         Check to see if a game entity has been clicked
@@ -85,12 +81,12 @@ class ControlLayer( layer.ScrollingManager ):
             This is actually kind of hard to figure out
         """
 
-        print x, y
+        print(x, y)
         self.world_mouse = self.pixel_from_screen(x, y)
         x, y = self.world_mouse
         x, y = self.pixel_to_screen(x, y)
         #self.screen_mouse = self.pixel_to_screen(x, y)
-        print 'updated', x, y
+        print('updated', x, y)
         if button & mouse.LEFT:
 
             # Account for x and y offset of spritelayer view
@@ -109,13 +105,12 @@ class ControlLayer( layer.ScrollingManager ):
             # Find out what was clicked
             for obj in (i[1] for i in self.spritelayer.children):
                 if  obj.contains(x, y):
-                    print "object:"
-                    print obj.x, obj.y
+                    print("object:")
+                    print(obj.x, obj.y)
                     targetclicked = True
                     self.lastobj = obj
                     break
             self.handle_click(targetclicked)
-
 
     def handle_click(self, targetclicked):
         """
@@ -136,7 +131,6 @@ class ControlLayer( layer.ScrollingManager ):
                 # Change to POV of this object
                 self.lastobj.clicked = True
 
-
     def undo_click(self):
         """
         Undo everything that happened when we clicked
@@ -149,7 +143,6 @@ class ControlLayer( layer.ScrollingManager ):
             self.lastobj = None
         else:
             self.lastobj = None
-
 
     def on_key_press(self, symbol, modifier):
         """
@@ -199,7 +192,6 @@ class ControlLayer( layer.ScrollingManager ):
             if symbol == key.LEFT or symbol == key.A or symbol == key.H:
                 self.spritelayer.x += 3
 
-
     def on_mouse_drag(self, x, y, dx, dy, button, modifier):
         """
         Drag mouse to move around map
@@ -212,8 +204,6 @@ class ControlLayer( layer.ScrollingManager ):
             #self.spritelayer.camera._set_eye(euclid.Point3(self.spritelayer.camera.eye[0] + dx,
             #                 self.spritelayer.camera.eye[1] + dy,
             #                 self.spritelayer.camera.eye[2]))
-
-
 
     def on_mouse_scroll(self, x, y, scroll_x, scroll_y):
         """
@@ -236,7 +226,6 @@ class ControlLayer( layer.ScrollingManager ):
         self.spritelayer.camera._set_eye(euclid.Point3(self.spritelayer.camera.eye[0],
                              self.spritelayer.camera.eye[1],
                              self.spritelayer.camera.eye[2] - self.spritelayer.camera.eye[2] * scroll_y / 10 ))
-
 
 
     """
@@ -277,7 +266,6 @@ class ControlLayer( layer.ScrollingManager ):
         #    fy = self.restricted_fy + (wzoom_center[1] - wy1)
         #    self.set_focus(fx, fy)
     """
-
 
     def on_key_release (self, symbol, modifiers):
         """
